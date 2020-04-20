@@ -10,6 +10,7 @@ Table table2019;
 int numCols;
 int numRows;
 int counter;
+int country = 15;
 
 //Arrays
 String[] countries2019;
@@ -41,7 +42,7 @@ void draw(){
 // UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
   //drawScatterPlot();
   //drawBarChart();
-  //drawTrendChart();
+  drawTrendChart();
 }
 
 // Initializes all variables used in the implementation
@@ -167,4 +168,53 @@ void drawScatterPlot() {
   float max = findMax(score2019);
   println("MIN: " + min);
   println("Max: " + max);
+}
+
+// Draws line graph with 2019 happiness score on y-axis
+// and the last 5 recorded years of the selected country 
+// on the x-axis.
+void drawTrendChart() {
+  float leftBorder = width/2 + 75;
+  float rightBorder = width - 75;
+  float bottom = height - 75;
+  float graphHeight = 480;
+  float graphWidth = (rightBorder - leftBorder) - 50;  // subtracted 20 to keep last values on graph
+  float minScore = findMin(score2019);
+  float maxScore = findMax(score2019);
+  float tick1 = leftBorder + graphWidth/5;
+  float tick2 = leftBorder + 2*(graphWidth/5);
+  float tick3 = leftBorder + 3*(graphWidth/5);
+  float tick4 = leftBorder + 4*(graphWidth/5);
+  float tick5 = leftBorder + 5*(graphWidth/5);
+  
+  line(leftBorder, graphHeight, leftBorder, bottom);  // draw x-axis
+  line(leftBorder, bottom, rightBorder, bottom);  // draw y-axis
+  
+  // draw x-axis tick marks
+  line(tick1, bottom + 5, leftBorder + graphWidth/5, bottom - 5);
+  line(tick2, bottom + 5, leftBorder + 2*(graphWidth/5), bottom - 5);
+  line(tick3, bottom + 5, leftBorder + 3*(graphWidth/5), bottom - 5);
+  line(tick4, bottom + 5, leftBorder + 4*(graphWidth/5), bottom - 5);
+  line(tick5, bottom + 5, leftBorder + 5*(graphWidth/5), bottom - 5);
+  
+  // re-map scores so that minimum is lowest score and maximum is highest
+  float point1 = map(score2015[country], minScore, maxScore, bottom, graphHeight);
+  float point2 = map(score2016[country], minScore, maxScore, bottom, graphHeight);
+  float point3 = map(score2017[country], minScore, maxScore, bottom, graphHeight);
+  float point4 = map(score2018[country], minScore, maxScore, bottom, graphHeight);
+  float point5 = map(score2019[country], minScore, maxScore, bottom, graphHeight);
+  
+  // Draw trend line for past 5 years
+  line(tick1, point1, tick2, point2);
+  line(tick2, point2, tick3, point3);
+  line(tick3, point3, tick4, point4);
+  line(tick4, point4, tick5, point5);
+  
+  // label ticks
+  text("2015", tick1 - 20, bottom + 25);
+  text("2016", tick2 - 20, bottom + 25);
+  text("2017", tick3 - 20, bottom + 25);
+  text("2018", tick4 - 20, bottom + 25);
+  text("2019", tick5 - 20, bottom + 25);
+ 
 }
