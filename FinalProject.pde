@@ -37,6 +37,11 @@ void setup(){
 void draw(){
   background(255);
   drawOutline();
+  
+// UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
+  //drawScatterPlot();
+  //drawBarChart();
+  //drawTrendChart();
 }
 
 // Initializes all variables used in the implementation
@@ -77,7 +82,6 @@ void loadTables(){
     score2016[i] = table2019.getFloat(row, "Score2016");
     score2017[i] = table2019.getFloat(row, "Score2017");
     score2018[i] = table2019.getFloat(row, "Score2018");
-    println(countries2019[i] + "\t" + score2017[i]);
     i++;
   }
 
@@ -87,7 +91,6 @@ void loadTables(){
 void drawOutline(){
   writeText();
   drawRects();
-  
 }
 
 void writeText(){
@@ -130,4 +133,38 @@ void drawRects(){
   
   rect(20,430,width/2 -30,height/2 - 50); //left bottom rect
   rect(width/2 ,430,width/2 -20,height/2 - 50); //right bottom rect
+}
+
+// Returns the smallest float value within array
+float findMin(float[] array) {
+  int i = 0;
+  float temp = array[i];
+  for (i = 1; i < 30; i++) {
+    if (array[i] < temp)
+      temp = array[i];
+  }
+  return temp;
+}
+
+// Returns the greatest float value within array
+float findMax(float[] array) {
+  int i = 0;
+  float temp = array[i];
+  for (i = 1; i < 30; i++) {
+    if (array[i] > temp)
+      temp = array[i];
+  }
+  return temp;
+}
+
+// Draws scatter plot with 2019 happiness score on y-axis
+// and the reader's choice of variable on the x-axis.
+void drawScatterPlot() {
+  //graph starts at (20,40)
+  //      ends at (width - 150, height/2 - 50
+  
+  float min = findMin(score2019);
+  float max = findMax(score2019);
+  println("MIN: " + min);
+  println("Max: " + max);
 }
