@@ -25,29 +25,29 @@ float[] healthyLife2019;
 float[] freedom2019;
 float[] generosity2019;
 float[] corruption2019;
-float[] regions2019;
+int[] regions2019;
 
-void setup() {
-  size (1000, 800);
+void setup(){
+  size (1000,800);
   background(255);
   drawOutline();
   initializeVaribles();
   loadTables();
 }
 
-void draw() {
+void draw(){
   background(255);
   drawOutline();
-
-  // UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
-  //drawScatterPlot();
+  
+// UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
+  drawScatterPlot(healthyLife2019);
   drawBarChart();
   drawTrendChart();
 }
 
 // Initializes all variables used in the implementation
-void initializeVaribles() {
-  table2019 = loadTable("2019.csv", "header");
+void initializeVaribles(){
+  table2019 = loadTable("2019.csv","header");
   numCols = table2019.getColumnCount();
   numRows = table2019.getRowCount(); 
   countries2019 = new String[30];
@@ -62,15 +62,15 @@ void initializeVaribles() {
   freedom2019 = new float[30];
   generosity2019 = new float[30];
   corruption2019 = new float[30];
-  regions2019 = new float[30];
+  regions2019 = new int[30]; 
 }
 
 
 //Loads information from 2019 table
-void loadTables() {
+void loadTables(){
   int i = 0;
   for (int row = 0; row < 30; row++) {
-    countries2019[i] = table2019.getString(row, "Country or region");
+    countries2019[i] = table2019.getString(row,"Country or region");
     score2019[i] = table2019.getFloat(row, "Score");
     gdp2019[i] = table2019.getFloat(row, "GDP per capita");
     socialSupport2019[i] = table2019.getFloat(row, "Social support");
@@ -78,22 +78,23 @@ void loadTables() {
     freedom2019[i] = table2019.getFloat(row, "Freedom to make life choices");
     generosity2019[i] = table2019.getFloat(row, "Generosity");
     corruption2019[i] = table2019.getFloat(row, "Perceptions of corruption");
-    regions2019[i] = table2019.getFloat(row, "Region");
+    regions2019[i] = table2019.getInt(row, "Region");
     score2015[i] = table2019.getFloat(row, "Score2015");
     score2016[i] = table2019.getFloat(row, "Score2016");
     score2017[i] = table2019.getFloat(row, "Score2017");
     score2018[i] = table2019.getFloat(row, "Score2018");
     i++;
   }
+
 }
 
 //draws the rectangles and sets the titles
-void drawOutline() {
+void drawOutline(){
   writeText();
   drawRects();
 }
 
-void writeText() {
+void writeText(){
   //text part
   textSize(15);
   fill(50);
@@ -105,23 +106,23 @@ void writeText() {
   text("Freedom to", width -110, 230); 
   text("Generosity", width -110, 270); 
   text("Percp of Cor", width -110, 310);
-
+  
   text("Click Buttons", width -119, 340);
   text("to change x ", width -118, 360);
   text("axis.", width -90, 380);
-
+  
   text("Bar Graph ", width/2 -300, 425);
   text("Trends of Happiness for ", width/2 + 150, 425);
 }
 
-void drawRects() {
+void drawRects(){
   //shape part
   noFill();
   strokeWeight(2);
-
-  rect(20, 40, width - 150, height/2 - 50); //scatter rect
-  rect(width-120, 40, 100, height/2 - 50); //button rect
-
+  
+  rect(20,40,width - 150,height/2 - 50); //scatter rect
+  rect(width-120, 40, 100 ,height/2 - 50); //button rect
+  
   //little rect buttons
   rect(width - 112, 50, 85, 30);
   rect(width - 112, 90, 85, 30);
@@ -130,9 +131,9 @@ void drawRects() {
   rect(width - 112, 210, 85, 30);
   rect(width - 112, 250, 85, 30);
   rect(width - 112, 290, 85, 30);
-
-  rect(20, 430, width/2 -30, height/2 - 50); //left bottom rect
-  rect(width/2, 430, width/2 -20, height/2 - 50); //right bottom rect
+  
+  rect(20,430,width/2 -30,height/2 - 50); //left bottom rect
+  rect(width/2 ,430,width/2 -20,height/2 - 50); //right bottom rect
 }
 
 // Returns the smallest float value within array
@@ -159,14 +160,50 @@ float findMax(float[] array) {
 
 // Draws scatter plot with 2019 happiness score on y-axis
 // and the reader's choice of variable on the x-axis.
-void drawScatterPlot() {
+void drawScatterPlot(float[] xArray) {
   //graph starts at (20,40)
   //      ends at (width - 150, height/2 - 50
-
-  float min = findMin(score2019);
-  float max = findMax(score2019);
-  println("MIN: " + min);
-  println("Max: " + max);
+  
+  float yMin = findMin(score2019);
+  float yMax = findMax(score2019);
+  float xMin = findMin(xArray);
+  float xMax = findMax(xArray);
+  
+  float radX = 15;
+  float radY = 15;
+  
+  float x, y;
+  
+  for (int i = 0; i < 30; i++) {
+    if (regions2019[i] == 1) {
+      fill(#0035FF);
+      stroke(#0035FF); 
+    } else if (regions2019[i] == 2) {
+      fill(#FA0D3C);
+      stroke(#FA0D3C);
+    } else if (regions2019[i] == 3) {
+      fill(#11F068);
+      stroke(#11F068);
+    } else if (regions2019[i] == 4) {
+      fill(#E7F011);
+      stroke(#E7F011);
+    } else if (regions2019[i] == 5) {
+      fill(#E0A205);
+      stroke(#E0A205);
+    } else if (regions2019[i] == 6) {
+      fill(#A337C4);
+      stroke(#A337C4);
+    } else if (regions2019[i] == 7) {
+      fill(#F56FCD);
+      stroke(#F56FCD);
+    }
+    
+    y = map(score2019[i], yMin, yMax, 40, height/2 - 50);
+    x = map(xArray[i], xMin, xMax, 30, width - 140);
+    
+    ellipse(x, (height/2) - y, radX, radY);
+  }
+  stroke(#000000);
 }
 
 // Draws line graph with 2019 happiness score on y-axis
