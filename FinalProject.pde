@@ -27,27 +27,27 @@ float[] generosity2019;
 float[] corruption2019;
 float[] regions2019;
 
-void setup(){
-  size (1000,800);
+void setup() {
+  size (1000, 800);
   background(255);
   drawOutline();
   initializeVaribles();
   loadTables();
 }
 
-void draw(){
+void draw() {
   background(255);
   drawOutline();
-  
-// UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
+
+  // UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
   //drawScatterPlot();
-  //drawBarChart();
+  drawBarChart();
   drawTrendChart();
 }
 
 // Initializes all variables used in the implementation
-void initializeVaribles(){
-  table2019 = loadTable("2019.csv","header");
+void initializeVaribles() {
+  table2019 = loadTable("2019.csv", "header");
   numCols = table2019.getColumnCount();
   numRows = table2019.getRowCount(); 
   countries2019 = new String[30];
@@ -62,15 +62,15 @@ void initializeVaribles(){
   freedom2019 = new float[30];
   generosity2019 = new float[30];
   corruption2019 = new float[30];
-  regions2019 = new float[30]; 
+  regions2019 = new float[30];
 }
 
 
 //Loads information from 2019 table
-void loadTables(){
+void loadTables() {
   int i = 0;
   for (int row = 0; row < 30; row++) {
-    countries2019[i] = table2019.getString(row,"Country or region");
+    countries2019[i] = table2019.getString(row, "Country or region");
     score2019[i] = table2019.getFloat(row, "Score");
     gdp2019[i] = table2019.getFloat(row, "GDP per capita");
     socialSupport2019[i] = table2019.getFloat(row, "Social support");
@@ -85,16 +85,15 @@ void loadTables(){
     score2018[i] = table2019.getFloat(row, "Score2018");
     i++;
   }
-
 }
 
 //draws the rectangles and sets the titles
-void drawOutline(){
+void drawOutline() {
   writeText();
   drawRects();
 }
 
-void writeText(){
+void writeText() {
   //text part
   textSize(15);
   fill(50);
@@ -106,23 +105,23 @@ void writeText(){
   text("Freedom to", width -110, 230); 
   text("Generosity", width -110, 270); 
   text("Percp of Cor", width -110, 310);
-  
+
   text("Click Buttons", width -119, 340);
   text("to change x ", width -118, 360);
   text("axis.", width -90, 380);
-  
+
   text("Bar Graph ", width/2 -300, 425);
   text("Trends of Happiness for ", width/2 + 150, 425);
 }
 
-void drawRects(){
+void drawRects() {
   //shape part
   noFill();
   strokeWeight(2);
-  
-  rect(20,40,width - 150,height/2 - 50); //scatter rect
-  rect(width-120, 40, 100 ,height/2 - 50); //button rect
-  
+
+  rect(20, 40, width - 150, height/2 - 50); //scatter rect
+  rect(width-120, 40, 100, height/2 - 50); //button rect
+
   //little rect buttons
   rect(width - 112, 50, 85, 30);
   rect(width - 112, 90, 85, 30);
@@ -131,9 +130,9 @@ void drawRects(){
   rect(width - 112, 210, 85, 30);
   rect(width - 112, 250, 85, 30);
   rect(width - 112, 290, 85, 30);
-  
-  rect(20,430,width/2 -30,height/2 - 50); //left bottom rect
-  rect(width/2 ,430,width/2 -20,height/2 - 50); //right bottom rect
+
+  rect(20, 430, width/2 -30, height/2 - 50); //left bottom rect
+  rect(width/2, 430, width/2 -20, height/2 - 50); //right bottom rect
 }
 
 // Returns the smallest float value within array
@@ -163,7 +162,7 @@ float findMax(float[] array) {
 void drawScatterPlot() {
   //graph starts at (20,40)
   //      ends at (width - 150, height/2 - 50
-  
+
   float min = findMin(score2019);
   float max = findMax(score2019);
   println("MIN: " + min);
@@ -186,35 +185,70 @@ void drawTrendChart() {
   float tick3 = leftBorder + 3*(graphWidth/5);
   float tick4 = leftBorder + 4*(graphWidth/5);
   float tick5 = leftBorder + 5*(graphWidth/5);
-  
+
   line(leftBorder, graphHeight, leftBorder, bottom);  // draw x-axis
   line(leftBorder, bottom, rightBorder, bottom);  // draw y-axis
-  
+
   // draw x-axis tick marks
   line(tick1, bottom + 5, leftBorder + graphWidth/5, bottom - 5);
   line(tick2, bottom + 5, leftBorder + 2*(graphWidth/5), bottom - 5);
   line(tick3, bottom + 5, leftBorder + 3*(graphWidth/5), bottom - 5);
   line(tick4, bottom + 5, leftBorder + 4*(graphWidth/5), bottom - 5);
   line(tick5, bottom + 5, leftBorder + 5*(graphWidth/5), bottom - 5);
-  
+
   // re-map scores so that minimum is lowest score and maximum is highest
   float point1 = map(score2015[country], minScore, maxScore, bottom, graphHeight);
   float point2 = map(score2016[country], minScore, maxScore, bottom, graphHeight);
   float point3 = map(score2017[country], minScore, maxScore, bottom, graphHeight);
   float point4 = map(score2018[country], minScore, maxScore, bottom, graphHeight);
   float point5 = map(score2019[country], minScore, maxScore, bottom, graphHeight);
-  
+
   // Draw trend line for past 5 years
   line(tick1, point1, tick2, point2);
   line(tick2, point2, tick3, point3);
   line(tick3, point3, tick4, point4);
   line(tick4, point4, tick5, point5);
-  
+
   // label ticks
   text("2015", tick1 - 20, bottom + 25);
   text("2016", tick2 - 20, bottom + 25);
   text("2017", tick3 - 20, bottom + 25);
   text("2018", tick4 - 20, bottom + 25);
   text("2019", tick5 - 20, bottom + 25);
- 
+}
+
+//Draws the bar chart with the 2019 happiness scores
+void drawBarChart() {
+  String country;
+  float minScore = findMin(score2019);
+  float maxScore = findMax(score2019);
+  float lineX = 75;
+  float heightFromBottom = height - 75;
+  float xAxisB = (width/2) - 75;
+  float lineY = 480;
+
+  float newWidth = (xAxisB - lineX) / 30;
+  float newHeight; 
+  float inc = 75;
+
+  //for scaling the graph
+  float yLen = heightFromBottom - lineY;
+  float yMax = 0.75 * yLen;
+  float yMin = 0.25 * yLen;
+
+  line(lineX, heightFromBottom, xAxisB, heightFromBottom); //xaxis
+  line(lineX, heightFromBottom, lineX, lineY); //yaxis
+
+  for (int i = 0; i < 30; i++) {
+    country = countries2019[i];
+    newHeight = map (score2019[i], minScore, maxScore, yMin, yMax);
+    rect(inc, heightFromBottom, newWidth, -newHeight);
+     
+    pushMatrix();
+    translate(inc, heightFromBottom);
+    rotate(HALF_PI);
+    text(country, 0, 0);
+    popMatrix();
+    inc = inc + newWidth;
+  }
 }
