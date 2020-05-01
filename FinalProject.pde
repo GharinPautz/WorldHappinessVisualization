@@ -25,6 +25,7 @@ float[] healthyLife2019;
 float[] freedom2019;
 float[] generosity2019;
 float[] corruption2019;
+float[] chosenArray;
 int[] regions2019;
 
 void setup(){
@@ -33,6 +34,7 @@ void setup(){
   drawOutline();
   initializeVaribles();
   loadTables();
+  chosenArray = gdp2019;
 }
 
 void draw(){
@@ -40,7 +42,7 @@ void draw(){
   drawOutline();
   
 // UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
-  drawScatterPlot(healthyLife2019);
+  drawScatterPlot(chosenArray);
   drawBarChart();
   drawTrendChart();
 }
@@ -206,6 +208,24 @@ void drawScatterPlot(float[] xArray) {
   stroke(#000000);
 }
 
+// Uses button clicks to change the array for X-axis on scatter plot
+void mouseClicked(){
+  if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 50 && mouseY < 80)
+    chosenArray = score2019;
+  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 90 && mouseY < 120)
+    chosenArray = gdp2019;
+  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 130 && mouseY < 160)
+    chosenArray = socialSupport2019;
+  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 170 && mouseY < 200)
+    chosenArray = healthyLife2019;
+  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 210 && mouseY < 240)
+    chosenArray = freedom2019;
+  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 250 && mouseY < 280)
+    chosenArray = generosity2019;
+  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 290 && mouseY < 320)
+    chosenArray = corruption2019;  
+}
+
 // Draws line graph with 2019 happiness score on y-axis
 // and the last 5 recorded years of the selected country 
 // on the x-axis.
@@ -289,3 +309,4 @@ void drawBarChart() {
     inc = inc + newWidth;
   }
 }
+
