@@ -1,6 +1,6 @@
 //Kat Sotelo & Gharin Pautz & Vincent Rettke
 //Final Project
-//04/21/2020
+//05/07/2020
 
 
 //Table
@@ -11,6 +11,9 @@ int numCols;
 int numRows;
 int counter;
 int country = 15;
+int selectedCountry;
+
+String curCountry;
 
 //Arrays
 String[] countries2019;
@@ -27,29 +30,32 @@ float[] generosity2019;
 float[] corruption2019;
 float[] chosenArray;
 int[] regions2019;
+int[] overallRank;
 
-void setup(){
-  size (1000,800);
+void setup() {
+  size (1000, 800);
   background(255);
   drawOutline();
   initializeVaribles();
   loadTables();
   chosenArray = gdp2019;
+  selectedCountry = 0;
 }
 
-void draw(){
+void draw() {
   background(255);
   drawOutline();
-  
-// UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
-  drawScatterPlot(chosenArray);
+
+  // UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
+  drawScatterPlot(chosenArray, selectedCountry);
   drawBarChart();
   drawTrendChart();
+  showCurCountry(selectedCountry);
 }
 
 // Initializes all variables used in the implementation
-void initializeVaribles(){
-  table2019 = loadTable("2019.csv","header");
+void initializeVaribles() {
+  table2019 = loadTable("2019.csv", "header");
   numCols = table2019.getColumnCount();
   numRows = table2019.getRowCount(); 
   countries2019 = new String[30];
@@ -65,14 +71,16 @@ void initializeVaribles(){
   generosity2019 = new float[30];
   corruption2019 = new float[30];
   regions2019 = new int[30]; 
+  overallRank = new int[30];
 }
 
 
 //Loads information from 2019 table
-void loadTables(){
+void loadTables() {
   int i = 0;
   for (int row = 0; row < 30; row++) {
-    countries2019[i] = table2019.getString(row,"Country or region");
+    overallRank[i] = table2019.getInt(row, "Overall rank");
+    countries2019[i] = table2019.getString(row, "Country or region");
     score2019[i] = table2019.getFloat(row, "Score");
     gdp2019[i] = table2019.getFloat(row, "GDP per capita");
     socialSupport2019[i] = table2019.getFloat(row, "Social support");
@@ -87,16 +95,15 @@ void loadTables(){
     score2018[i] = table2019.getFloat(row, "Score2018");
     i++;
   }
-
 }
 
 //draws the rectangles and sets the titles
-void drawOutline(){
+void drawOutline() {
   writeText();
   drawRects();
 }
 
-void writeText(){
+void writeText() {
   //text part
   textSize(15);
   fill(50);
@@ -108,23 +115,23 @@ void writeText(){
   text("Freedom to", width -110, 230); 
   text("Generosity", width -110, 270); 
   text("Percp of Cor", width -110, 310);
-  
+
   text("Click Buttons", width -119, 340);
   text("to change x ", width -118, 360);
   text("axis.", width -90, 380);
-  
-  text("Bar Graph ", width/2 -300, 425);
+
+  text("Happiness Scores ", width/2 -300, 425);
   text("Trends of Happiness for ", width/2 + 150, 425);
 }
 
-void drawRects(){
+void drawRects() {
   //shape part
   noFill();
   strokeWeight(2);
-  
-  rect(20,40,width - 150,height/2 - 50); //scatter rect
-  rect(width-120, 40, 100 ,height/2 - 50); //button rect
-  
+
+  rect(20, 40, width - 150, height/2 - 50); //scatter rect
+  rect(width-120, 40, 100, height/2 - 50); //button rect
+
   //little rect buttons
   rect(width - 112, 50, 85, 30);
   rect(width - 112, 90, 85, 30);
@@ -133,9 +140,9 @@ void drawRects(){
   rect(width - 112, 210, 85, 30);
   rect(width - 112, 250, 85, 30);
   rect(width - 112, 290, 85, 30);
-  
-  rect(20,430,width/2 -30,height/2 - 50); //left bottom rect
-  rect(width/2 ,430,width/2 -20,height/2 - 50); //right bottom rect
+
+  rect(20, 430, width/2 -30, height/2 - 50); //left bottom rect
+  rect(width/2, 430, width/2 -20, height/2 - 50); //right bottom rect
 }
 
 // Returns the smallest float value within array
@@ -162,24 +169,28 @@ float findMax(float[] array) {
 
 // Draws scatter plot with 2019 happiness score on y-axis
 // and the reader's choice of variable on the x-axis.
-void drawScatterPlot(float[] xArray) {
+void drawScatterPlot(float[] xArray, int selectedCountry) {
   //graph starts at (20,40)
   //      ends at (width - 150, height/2 - 50
-  
+
   float yMin = findMin(score2019);
   float yMax = findMax(score2019);
   float xMin = findMin(xArray);
   float xMax = findMax(xArray);
-  
+
   float radX = 15;
   float radY = 15;
-  
+
   float x, y;
-  
+
   for (int i = 0; i < 30; i++) {
-    if (regions2019[i] == 1) {
+    if (i == selectedCountry) {
+      stroke(25);
+      strokeWeight(5);
+      fill(#D61C98);
+    } else if (regions2019[i] == 1) {
       fill(#0035FF);
-      stroke(#0035FF); 
+      stroke(#0035FF);
     } else if (regions2019[i] == 2) {
       fill(#FA0D3C);
       stroke(#FA0D3C);
@@ -198,38 +209,43 @@ void drawScatterPlot(float[] xArray) {
     } else if (regions2019[i] == 7) {
       fill(#F56FCD);
       stroke(#F56FCD);
-    }
-    
+    } 
     y = map(score2019[i], yMin, yMax, 40, height/2 - 50);
     x = map(xArray[i], xMin, xMax, 30, width - 140);
-    
+
     ellipse(x, (height/2) - y, radX, radY);
   }
+  strokeWeight(1);
   stroke(#000000);
+
+
+
 }
 
 // Uses button clicks to change the array for X-axis on scatter plot
-void mouseClicked(){
-  if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 50 && mouseY < 80)
+void mouseClicked() {
+  if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 50 && mouseY < 80)
     chosenArray = score2019;
-  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 90 && mouseY < 120)
+  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 90 && mouseY < 120)
     chosenArray = gdp2019;
-  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 130 && mouseY < 160)
+  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 130 && mouseY < 160)
     chosenArray = socialSupport2019;
-  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 170 && mouseY < 200)
+  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 170 && mouseY < 200)
     chosenArray = healthyLife2019;
-  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 210 && mouseY < 240)
+  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 210 && mouseY < 240)
     chosenArray = freedom2019;
-  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 250 && mouseY < 280)
+  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 250 && mouseY < 280)
     chosenArray = generosity2019;
-  else if(mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 290 && mouseY < 320)
-    chosenArray = corruption2019;  
+  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 290 && mouseY < 320)
+    chosenArray = corruption2019;
 }
 
 // Draws line graph with 2019 happiness score on y-axis
 // and the last 5 recorded years of the selected country 
 // on the x-axis.
 void drawTrendChart() {
+  fill(0);
+  strokeWeight(1);
   float leftBorder = width/2 + 75;
   float rightBorder = width - 75;
   float bottom = height - 75;
@@ -276,7 +292,6 @@ void drawTrendChart() {
 
 //Draws the bar chart with the 2019 happiness scores
 void drawBarChart() {
-  String country;
   float minScore = findMin(score2019);
   float maxScore = findMax(score2019);
   float lineX = 75;
@@ -296,17 +311,54 @@ void drawBarChart() {
   line(lineX, heightFromBottom, xAxisB, heightFromBottom); //xaxis
   line(lineX, heightFromBottom, lineX, lineY); //yaxis
 
+  //Writes Happiness Score
+  pushMatrix();
+  fill(0);
+  translate(50, 680);
+  rotate(-HALF_PI);
+  text("Happiness Scores", 0, 0);
+  popMatrix();
+
   for (int i = 0; i < 30; i++) {
-    country = countries2019[i];
+    if (i == selectedCountry) {
+      stroke(25);
+      strokeWeight(5);
+      fill(#D61C98);
+    } else {
+      noStroke();
+      strokeWeight(1);
+      stroke(#000000);
+      fill(255);
+    }
     newHeight = map (score2019[i], minScore, maxScore, yMin, yMax);
     rect(inc, heightFromBottom, newWidth, -newHeight);
-     
-    pushMatrix();
-    translate(inc, heightFromBottom);
-    rotate(HALF_PI);
-    text(country, 0, 0);
-    popMatrix();
     inc = inc + newWidth;
   }
 }
 
+//Changes through the 30 different countries that are selected
+void keyPressed() {
+  if (key == CODED && keyCode == UP) {
+    selectedCountry = (selectedCountry + 1) % 30;
+  } else if (key == CODED && keyCode == DOWN) {
+    selectedCountry = (selectedCountry - 1) % 30;
+
+    if (selectedCountry < 0) {
+      selectedCountry = 29;
+    } else if (selectedCountry >29) {
+      selectedCountry =0;
+    }
+  }
+} 
+
+// Shows text at the top of visualization with country name 
+void showCurCountry(int selectedCountry) {
+  textSize(15);
+  float xCord = (width/2) + 200;
+  fill(50);
+  curCountry = "Current Country: "+countries2019[selectedCountry];
+  text(curCountry, xCord + 5, 15);
+  text("Score: " + score2019[selectedCountry], 200, 750);
+  text("Current Country: "+countries2019[selectedCountry], 150, 770);
+  noFill();
+}
