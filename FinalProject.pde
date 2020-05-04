@@ -10,8 +10,8 @@ Table table2019;
 int numCols;
 int numRows;
 int counter;
-int country = 15;
 int selectedCountry;
+int buttonColorChanger = 0;
 
 String curCountry;
 
@@ -35,10 +35,11 @@ int[] overallRank;
 void setup() {
   size (1000, 800);
   background(255);
-  drawOutline();
+  
   initializeVaribles();
   loadTables();
-  chosenArray = gdp2019;
+  drawOutline();
+  chosenArray = score2019;
   selectedCountry = 0;
 }
 
@@ -99,8 +100,8 @@ void loadTables() {
 
 //draws the rectangles and sets the titles
 void drawOutline() {
-  writeText();
   drawRects();
+  writeText(); 
 }
 
 void writeText() {
@@ -121,7 +122,7 @@ void writeText() {
   text("axis.", width -90, 380);
 
   text("Happiness Scores ", width/2 -300, 425);
-  text("Trends of Happiness for ", width/2 + 150, 425);
+  text("Trends of Happiness for " + countries2019[selectedCountry], width/2 + 150, 425);
 }
 
 void drawRects() {
@@ -133,13 +134,34 @@ void drawRects() {
   rect(width-120, 40, 100, height/2 - 50); //button rect
 
   //little rect buttons
+  if (buttonColorChanger == 0)
+    fill(#EBFF7E);
   rect(width - 112, 50, 85, 30);
+  noFill();
+  if (buttonColorChanger == 1)
+    fill(#EBFF7E);
   rect(width - 112, 90, 85, 30);
+  noFill();
+  if (buttonColorChanger == 2)
+    fill(#EBFF7E);
   rect(width - 112, 130, 85, 30);
+  noFill();
+  if (buttonColorChanger == 3)
+    fill(#EBFF7E);
   rect(width - 112, 170, 85, 30);
+  noFill();
+  if (buttonColorChanger == 4)
+    fill(#EBFF7E);
   rect(width - 112, 210, 85, 30);
+  noFill();
+  if (buttonColorChanger == 5)
+    fill(#EBFF7E);
   rect(width - 112, 250, 85, 30);
+  noFill();
+  if (buttonColorChanger == 6)
+    fill(#EBFF7E);
   rect(width - 112, 290, 85, 30);
+  noFill();
 
   rect(20, 430, width/2 -30, height/2 - 50); //left bottom rect
   rect(width/2, 430, width/2 -20, height/2 - 50); //right bottom rect
@@ -225,19 +247,40 @@ void drawScatterPlot(float[] xArray, int selectedCountry) {
 // Uses button clicks to change the array for X-axis on scatter plot
 void mouseClicked() {
   if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 50 && mouseY < 80)
+  {
     chosenArray = score2019;
+    buttonColorChanger = 0;
+  } 
   else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 90 && mouseY < 120)
+  {
     chosenArray = gdp2019;
+    buttonColorChanger = 1;
+  }
   else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 130 && mouseY < 160)
+  {
     chosenArray = socialSupport2019;
+    buttonColorChanger = 2;
+  }
   else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 170 && mouseY < 200)
+  {
     chosenArray = healthyLife2019;
+    buttonColorChanger = 3;
+  }
   else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 210 && mouseY < 240)
+  {
     chosenArray = freedom2019;
+    buttonColorChanger = 4;
+  }
   else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 250 && mouseY < 280)
+  {
     chosenArray = generosity2019;
+    buttonColorChanger = 5;
+  }
   else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 290 && mouseY < 320)
+  {
     chosenArray = corruption2019;
+    buttonColorChanger = 6;
+  }
 }
 
 // Draws line graph with 2019 happiness score on y-axis
@@ -251,7 +294,7 @@ void drawTrendChart() {
   float bottom = height - 75;
   float graphHeight = 480;
   float graphWidth = (rightBorder - leftBorder) - 50;  // subtracted 20 to keep last values on graph
-  float minScore = findMin(score2019);
+  float minScore = findMin(score2015);
   float maxScore = findMax(score2019);
   float tick1 = leftBorder + graphWidth/5;
   float tick2 = leftBorder + 2*(graphWidth/5);
@@ -270,11 +313,11 @@ void drawTrendChart() {
   line(tick5, bottom + 5, leftBorder + 5*(graphWidth/5), bottom - 5);
 
   // re-map scores so that minimum is lowest score and maximum is highest
-  float point1 = map(score2015[country], minScore, maxScore, bottom, graphHeight);
-  float point2 = map(score2016[country], minScore, maxScore, bottom, graphHeight);
-  float point3 = map(score2017[country], minScore, maxScore, bottom, graphHeight);
-  float point4 = map(score2018[country], minScore, maxScore, bottom, graphHeight);
-  float point5 = map(score2019[country], minScore, maxScore, bottom, graphHeight);
+  float point1 = map(score2015[selectedCountry], minScore, maxScore, bottom, graphHeight);
+  float point2 = map(score2016[selectedCountry], minScore, maxScore, bottom, graphHeight);
+  float point3 = map(score2017[selectedCountry], minScore, maxScore, bottom, graphHeight);
+  float point4 = map(score2018[selectedCountry], minScore, maxScore, bottom, graphHeight);
+  float point5 = map(score2019[selectedCountry], minScore, maxScore, bottom, graphHeight);
 
   // Draw trend line for past 5 years
   line(tick1, point1, tick2, point2);
@@ -288,6 +331,14 @@ void drawTrendChart() {
   text("2017", tick3 - 20, bottom + 25);
   text("2018", tick4 - 20, bottom + 25);
   text("2019", tick5 - 20, bottom + 25);
+  
+  // Writes Happiness Score
+  pushMatrix();
+  fill(0);
+  translate(width/2 + 50, 680);
+  rotate(-HALF_PI);
+  text("Happiness Scores", 0, 0);
+  popMatrix();
 }
 
 //Draws the bar chart with the 2019 happiness scores
