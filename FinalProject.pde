@@ -117,9 +117,9 @@ void writeText() {
   text("Corruption", width - 100, 310);
 
   textSize(15);
-  text("Click Buttons", width -119, 340);
-  text("to change x ", width -118, 360);
-  text("axis.", width -90, 380);
+  text("Click Buttons", width -118, 340);
+  text("to change x ", width -113, 360);
+  text("axis.", width -85, 380);
 
   text("Happiness Scores ", width/2 -300, 425);
   text("Trends of Happiness for " + countries2019[selectedCountry], width/2 + 150, 425);
