@@ -46,8 +46,7 @@ void setup() {
 void draw() {
   background(255);
   drawOutline();
-
-  // UNCOMMENT YOUR FUNCTION TO CREATE YOUR IMPLEMENTATION 
+ 
   drawScatterPlot(chosenArray, selectedCountry);
   drawBarChart();
   drawTrendChart();
@@ -106,17 +105,18 @@ void drawOutline() {
 
 void writeText() {
   //text part
-  textSize(15);
+  textSize(12);
   fill(50);
   text("Happiness Chart for 2019", width/2 - 100, 20);
-  text("Score", width -100, 70); 
-  text("GDP ", width -100, 110); 
-  text("Social Supp", width -110, 150); 
-  text("Healthy Life", width -110, 190); 
-  text("Freedom to", width -110, 230); 
-  text("Generosity", width -110, 270); 
-  text("Percp of Cor", width -110, 310);
+  text("Happiness", width - 100, 70); 
+  text("GDP", width - 85, 110); 
+  text("Social Support", width - 110, 150); 
+  text("Healthy Life", width -105, 190); 
+  text("Freedom", width - 95, 230); 
+  text("Generosity", width - 100, 270); 
+  text("Corruption", width - 100, 310);
 
+  textSize(15);
   text("Click Buttons", width -119, 340);
   text("to change x ", width -118, 360);
   text("axis.", width -90, 380);
@@ -192,9 +192,67 @@ float findMax(float[] array) {
 // Draws scatter plot with 2019 happiness score on y-axis
 // and the reader's choice of variable on the x-axis.
 void drawScatterPlot(float[] xArray, int selectedCountry) {
-  //graph starts at (20,40)
+  // Rectangle starts at (20,40)
   //      ends at (width - 150, height/2 - 50
 
+  // draw color key for scatterplot
+  drawColorKey();
+  
+  // draw outlines for scatterplot graph
+  // Scatterplot starts at (200, 60)
+  //       ends at (width - 150, height/2 - 50)
+  float xAxisYStart = (height / 2) - 50;
+  float xAxisYEnd = 60;
+  float xAxisXStart = 200;
+  
+  float yAxisXEnd = width - 150;
+  float yAxisYHeight = (height / 2) - 50;
+  
+  // Y-Axis Label
+  pushMatrix();
+  fill(0);
+  translate(xAxisXStart - 20, xAxisYStart - 80);
+  rotate(-HALF_PI);
+  text("Happiness Scores", 0, 0);
+  popMatrix();
+  
+  line(xAxisXStart, xAxisYStart, xAxisXStart, xAxisYEnd); //y-axis
+  
+  // X-Axis Label
+  
+  if (chosenArray == score2019) {
+    fill(0);
+    textSize(15);
+    text("Happiness Scores", 430, height/2 - 25);
+  } else if (chosenArray == gdp2019) {
+    fill(0);
+    textSize(15);
+    text("GDP Per Capita", 440, height/2 - 25);
+  } else if (chosenArray == socialSupport2019) {
+    fill(0);
+    textSize(15);
+    text("Social Support", 450, height/2 - 25);
+  } else if (chosenArray == healthyLife2019) {
+    fill(0);
+    textSize(15);
+    text("Healthy Life Expectancy", 420, height/2 - 25);
+  } else if (chosenArray == freedom2019) {
+    fill(0);
+    textSize(15);
+    text("Freedom To Make Life Choices", 400, height/2 - 25);
+  } else if (chosenArray == generosity2019) {
+    fill(0);
+    textSize(15);
+    text("Generosity", 460, height/2 - 25);
+  } else if (chosenArray == corruption2019) {
+    fill(0);
+    textSize(15);
+    text("Perceptions of Corruption", 420, height/2 - 25);
+  }
+  
+  line(xAxisXStart, yAxisYHeight, yAxisXEnd, yAxisYHeight); //x-axis
+  
+  // Retrieve data and draw circles
   float yMin = findMin(score2019);
   float yMax = findMax(score2019);
   float xMin = findMin(xArray);
@@ -232,16 +290,71 @@ void drawScatterPlot(float[] xArray, int selectedCountry) {
       fill(#F56FCD);
       stroke(#F56FCD);
     } 
-    y = map(score2019[i], yMin, yMax, 40, height/2 - 50);
-    x = map(xArray[i], xMin, xMax, 30, width - 140);
+    y = map(score2019[i], yMin, yMax, 70, height/2 - 60);
+    x = map(xArray[i], xMin, xMax, 210, width - 160); //30, width - 140
 
+    println("x min: " + xMin);
+    println("x max: " + xMax);
     ellipse(x, (height/2) - y, radX, radY);
   }
   strokeWeight(1);
   stroke(#000000);
 
+}
 
-
+// Draws the color key in scatterplot based on the regions each country is in
+void drawColorKey() {
+  // Rectangle starts at (20,40)
+  //      ends at (width - 150, height/2 - 50
+  
+  textSize(12);
+  
+  // Blue = West Europe
+  fill(#0035FF);
+  rect(30, 100, 25, 25);
+  fill(0);
+  text("West Europe", 60, 120);
+  
+  // North America
+  fill(#FA0D3C);
+  rect(30, 130, 25, 25);
+  fill(0);
+  text("North America", 60, 150);
+  
+  // Oceania
+  fill(#11F068);
+  rect(30, 160, 25, 25);
+  fill(0);
+  text("Oceania", 60, 180);
+  
+  // Middle East & North Africa
+  fill(#E7F011);
+  rect(30, 190, 25, 25);
+  fill(0);
+  text("Middle East &", 60, 202);
+  text("North Africa", 60, 212);
+  
+  // Latin America anad Caribbean
+  fill(#E0A205);
+  rect(30, 220, 25, 25);
+  fill(0);
+  text("Latin America &", 60, 232);
+  text("Caribbean", 60, 242);
+  
+  // Southeast Asia
+  fill(#A337C4);
+  rect(30, 250, 25, 25);
+  fill(0);
+  text("Southeast Asia", 60, 270);
+  
+  // Central & East Europe
+  fill(#F56FCD);
+  rect(30, 280, 25, 25);
+  fill(0);
+  text("Central &", 60, 292);
+  text("East Europe", 60, 302);
+  
+  textSize(15);
 }
 
 // Uses button clicks to change the array for X-axis on scatter plot
