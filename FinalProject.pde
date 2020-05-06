@@ -122,7 +122,9 @@ void writeText() {
   text("axis.", width -85, 380);
 
   text("Happiness Scores ", width/2 -300, 425);
-  text("Trends of Happiness for " + countries2019[selectedCountry], width/2 + 150, 425);
+  text("Happiness Scores from 2015-2019 of ", width/2 + 39, 425);
+  fill(255,0,0);
+  text(countries2019[selectedCountry], width/2 + 320, 425);
 }
 
 void drawRects() {
@@ -424,6 +426,24 @@ void drawTrendChart() {
   line(tick3, bottom + 5, leftBorder + 3*(graphWidth/5), bottom - 5);
   line(tick4, bottom + 5, leftBorder + 4*(graphWidth/5), bottom - 5);
   line(tick5, bottom + 5, leftBorder + 5*(graphWidth/5), bottom - 5);
+  
+  // draw y-axis tick marks
+  line(leftBorder - 5, bottom, leftBorder + 5, bottom);
+  line(leftBorder - 5, bottom - graphHeight/8, leftBorder + 5, bottom - graphHeight/8);
+  line(leftBorder - 5, bottom - 2*graphHeight/8, leftBorder + 5, bottom - 2*graphHeight/8);
+  line(leftBorder - 5, bottom - 3*graphHeight/8, leftBorder + 5, bottom - 3*graphHeight/8);
+  line(leftBorder - 5, bottom - 4*graphHeight/8, leftBorder + 5, bottom - 4*graphHeight/8);
+  
+  float scoreRange = findMax(score2019) - findMin(score2015); 
+  float minimum = findMin(score2015);
+  
+  // label y-axis tick marks
+  textSize(10);
+  text(minimum, leftBorder - 40, bottom);
+  text(scoreRange/4 + minimum, leftBorder - 40, bottom - graphHeight/8 + 5);
+  text(scoreRange/2 + minimum, leftBorder - 40, bottom - 2*graphHeight/8 + 5);
+  text(3*scoreRange/4 + minimum, leftBorder - 40, bottom - 3*graphHeight/8 + 5);
+  text(findMax(score2019), leftBorder - 40, bottom - 4*graphHeight/8 + 5);
 
   // re-map scores so that minimum is lowest score and maximum is highest
   float point1 = map(score2015[selectedCountry], minScore, maxScore, bottom, graphHeight);
@@ -437,8 +457,16 @@ void drawTrendChart() {
   line(tick2, point2, tick3, point3);
   line(tick3, point3, tick4, point4);
   line(tick4, point4, tick5, point5);
+  
+  // Draw points of each year
+  ellipse(tick1, point1, 5, 5);
+  ellipse(tick2, point2, 5, 5);
+  ellipse(tick3, point3, 5, 5);
+  ellipse(tick4, point4, 5, 5);
+  ellipse(tick5, point5, 5, 5);
 
-  // label ticks
+  // label x-axis ticks
+  textSize(15);
   text("2015", tick1 - 20, bottom + 25);
   text("2016", tick2 - 20, bottom + 25);
   text("2017", tick3 - 20, bottom + 25);
@@ -448,8 +476,9 @@ void drawTrendChart() {
   // Writes Happiness Score
   pushMatrix();
   fill(0);
-  translate(width/2 + 50, 680);
+  translate(width/2 + 20, 680);
   rotate(-HALF_PI);
+  textSize(15);
   text("Happiness Scores", 0, 0);
   popMatrix();
 }
@@ -520,9 +549,14 @@ void showCurCountry(int selectedCountry) {
   textSize(15);
   float xCord = (width/2) + 200;
   fill(50);
-  curCountry = "Current Country: "+countries2019[selectedCountry];
-  text(curCountry, xCord + 5, 15);
+  curCountry = "Current Country: "+ countries2019[selectedCountry];
+  text("Current Country: ", xCord + 5, 15);
+  fill(255, 0, 0);
+  text(countries2019[selectedCountry], xCord + 132, 15);
+  fill(0);
   text("Score: " + score2019[selectedCountry], 200, 750);
-  text("Current Country: "+countries2019[selectedCountry], 150, 770);
+  text("Current Country: ", 150, 770);
+  fill(255, 0, 0);
+  text(countries2019[selectedCountry], 277, 770);
   noFill();
 }
