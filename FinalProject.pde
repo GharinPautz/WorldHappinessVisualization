@@ -32,10 +32,17 @@ float[] chosenArray;
 int[] regions2019;
 int[] overallRank;
 
+//motion
+float size = 8;
+float minSize = 8;
+float maxSize = 15;
+//Animation speed of increase/decrease
+float sizeSpeed = 0.3;
+
 void setup() {
   size (1000, 800);
   background(255);
-  
+
   initializeVaribles();
   loadTables();
   drawOutline();
@@ -46,8 +53,16 @@ void setup() {
 void draw() {
   background(255);
   drawOutline();
- 
-  drawScatterPlot(chosenArray, selectedCountry);
+
+  // Animation of ellipses increasing and decreasing length. Used this link as a reference.
+  // https://stackoverflow.com/questions/35156661/how-to-make-the-size-of-ellipse-to-get-smaller-and-bigger-in-processing-automati
+  if (size < minSize || size > maxSize) {
+    sizeSpeed *= -1;
+  }
+  size += sizeSpeed;
+
+
+  drawScatterPlot(chosenArray, selectedCountry, size, size);
   drawBarChart();
   drawTrendChart();
   showCurCountry(selectedCountry);
@@ -100,7 +115,7 @@ void loadTables() {
 //draws the rectangles and sets the titles
 void drawOutline() {
   drawRects();
-  writeText(); 
+  writeText();
 }
 
 void writeText() {
@@ -121,9 +136,9 @@ void writeText() {
   text("to change x ", width -113, 360);
   text("axis.", width -85, 380);
 
-  text("Happiness Scores ", width/2 -300, 425);
+  text("30 Countries Happiness Scores for 2019  ", width/2 -400, 425);
   text("Happiness Scores from 2015-2019 of ", width/2 + 39, 425);
-  fill(255,0,0);
+  fill(255, 0, 0);
   text(countries2019[selectedCountry], width/2 + 320, 425);
 }
 
@@ -193,23 +208,23 @@ float findMax(float[] array) {
 
 // Draws scatter plot with 2019 happiness score on y-axis
 // and the reader's choice of variable on the x-axis.
-void drawScatterPlot(float[] xArray, int selectedCountry) {
+void drawScatterPlot(float[] xArray, int selectedCountry, float animWidth, float animHeight) {
   // Rectangle starts at (20,40)
   //      ends at (width - 150, height/2 - 50
 
   // draw color key for scatterplot
   drawColorKey();
-  
+
   // draw outlines for scatterplot graph
   // Scatterplot starts at (200, 60)
   //       ends at (width - 150, height/2 - 50)
   float xAxisYStart = (height / 2) - 50;
   float xAxisYEnd = 60;
   float xAxisXStart = 200;
-  
+
   float yAxisXEnd = width - 150;
   float yAxisYHeight = (height / 2) - 50;
-  
+
   // Y-Axis Label
   pushMatrix();
   fill(0);
@@ -217,11 +232,11 @@ void drawScatterPlot(float[] xArray, int selectedCountry) {
   rotate(-HALF_PI);
   text("Happiness Scores", 0, 0);
   popMatrix();
-  
+
   line(xAxisXStart, xAxisYStart, xAxisXStart, xAxisYEnd); //y-axis
-  
+
   // X-Axis Label
-  
+
   if (chosenArray == score2019) {
     fill(0);
     textSize(15);
@@ -251,9 +266,9 @@ void drawScatterPlot(float[] xArray, int selectedCountry) {
     textSize(15);
     text("Perceptions of Corruption", 420, height/2 - 25);
   }
-  
+
   line(xAxisXStart, yAxisYHeight, yAxisXEnd, yAxisYHeight); //x-axis
-  
+
   // Retrieve data and draw circles
   float yMin = findMin(score2019);
   float yMax = findMax(score2019);
@@ -269,7 +284,6 @@ void drawScatterPlot(float[] xArray, int selectedCountry) {
     if (i == selectedCountry) {
       stroke(25);
       strokeWeight(5);
-      fill(#D61C98);
     } else if (regions2019[i] == 1) {
       fill(#0035FF);
       stroke(#0035FF);
@@ -297,65 +311,70 @@ void drawScatterPlot(float[] xArray, int selectedCountry) {
 
     println("x min: " + xMin);
     println("x max: " + xMax);
-    ellipse(x, (height/2) - y, radX, radY);
+
+    //If the selected country is chosen then there is motion
+    if (i == selectedCountry) {
+      ellipse(x, (height/2) - y, animWidth, animHeight);
+    } else {
+      ellipse(x, (height/2) - y, radX, radY);
+    }
   }
   strokeWeight(1);
   stroke(#000000);
-
 }
 
 // Draws the color key in scatterplot based on the regions each country is in
 void drawColorKey() {
   // Rectangle starts at (20,40)
   //      ends at (width - 150, height/2 - 50
-  
+
   textSize(12);
-  
+
   // Blue = West Europe
   fill(#0035FF);
   rect(30, 100, 25, 25);
   fill(0);
   text("West Europe", 60, 120);
-  
+
   // North America
   fill(#FA0D3C);
   rect(30, 130, 25, 25);
   fill(0);
   text("North America", 60, 150);
-  
+
   // Oceania
   fill(#11F068);
   rect(30, 160, 25, 25);
   fill(0);
   text("Oceania", 60, 180);
-  
+
   // Middle East & North Africa
   fill(#E7F011);
   rect(30, 190, 25, 25);
   fill(0);
   text("Middle East &", 60, 202);
   text("North Africa", 60, 212);
-  
+
   // Latin America anad Caribbean
   fill(#E0A205);
   rect(30, 220, 25, 25);
   fill(0);
   text("Latin America &", 60, 232);
   text("Caribbean", 60, 242);
-  
+
   // Southeast Asia
   fill(#A337C4);
   rect(30, 250, 25, 25);
   fill(0);
   text("Southeast Asia", 60, 270);
-  
+
   // Central & East Europe
   fill(#F56FCD);
   rect(30, 280, 25, 25);
   fill(0);
   text("Central &", 60, 292);
   text("East Europe", 60, 302);
-  
+
   textSize(15);
 }
 
@@ -365,33 +384,27 @@ void mouseClicked() {
   {
     chosenArray = score2019;
     buttonColorChanger = 0;
-  } 
-  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 90 && mouseY < 120)
+  } else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 90 && mouseY < 120)
   {
     chosenArray = gdp2019;
     buttonColorChanger = 1;
-  }
-  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 130 && mouseY < 160)
+  } else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 130 && mouseY < 160)
   {
     chosenArray = socialSupport2019;
     buttonColorChanger = 2;
-  }
-  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 170 && mouseY < 200)
+  } else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 170 && mouseY < 200)
   {
     chosenArray = healthyLife2019;
     buttonColorChanger = 3;
-  }
-  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 210 && mouseY < 240)
+  } else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 210 && mouseY < 240)
   {
     chosenArray = freedom2019;
     buttonColorChanger = 4;
-  }
-  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 250 && mouseY < 280)
+  } else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 250 && mouseY < 280)
   {
     chosenArray = generosity2019;
     buttonColorChanger = 5;
-  }
-  else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 290 && mouseY < 320)
+  } else if (mouseX > (width - 112) && mouseX < (width - 112 + 85) && mouseY > 290 && mouseY < 320)
   {
     chosenArray = corruption2019;
     buttonColorChanger = 6;
@@ -426,17 +439,17 @@ void drawTrendChart() {
   line(tick3, bottom + 5, leftBorder + 3*(graphWidth/5), bottom - 5);
   line(tick4, bottom + 5, leftBorder + 4*(graphWidth/5), bottom - 5);
   line(tick5, bottom + 5, leftBorder + 5*(graphWidth/5), bottom - 5);
-  
+
   // draw y-axis tick marks
   line(leftBorder - 5, bottom, leftBorder + 5, bottom);
   line(leftBorder - 5, bottom - graphHeight/8, leftBorder + 5, bottom - graphHeight/8);
   line(leftBorder - 5, bottom - 2*graphHeight/8, leftBorder + 5, bottom - 2*graphHeight/8);
   line(leftBorder - 5, bottom - 3*graphHeight/8, leftBorder + 5, bottom - 3*graphHeight/8);
   line(leftBorder - 5, bottom - 4*graphHeight/8, leftBorder + 5, bottom - 4*graphHeight/8);
-  
+
   float scoreRange = findMax(score2019) - findMin(score2015); 
   float minimum = findMin(score2015);
-  
+
   // label y-axis tick marks
   textSize(10);
   text(minimum, leftBorder - 40, bottom);
@@ -457,7 +470,7 @@ void drawTrendChart() {
   line(tick2, point2, tick3, point3);
   line(tick3, point3, tick4, point4);
   line(tick4, point4, tick5, point5);
-  
+
   // Draw points of each year
   ellipse(tick1, point1, 5, 5);
   ellipse(tick2, point2, 5, 5);
@@ -472,7 +485,7 @@ void drawTrendChart() {
   text("2017", tick3 - 20, bottom + 25);
   text("2018", tick4 - 20, bottom + 25);
   text("2019", tick5 - 20, bottom + 25);
-  
+
   // Writes Happiness Score
   pushMatrix();
   fill(0);
@@ -485,6 +498,7 @@ void drawTrendChart() {
 
 //Draws the bar chart with the 2019 happiness scores
 void drawBarChart() {
+  drawTicksForBarChart();
   float minScore = findMin(score2019);
   float maxScore = findMax(score2019);
   float lineX = 75;
@@ -498,8 +512,8 @@ void drawBarChart() {
 
   //for scaling the graph
   float yLen = heightFromBottom - lineY;
-  float yMax = 0.75 * yLen;
-  float yMin = 0.25 * yLen;
+  float yMax = 0.87 * yLen;
+  float yMin = 0.55 * yLen;
 
   line(lineX, heightFromBottom, xAxisB, heightFromBottom); //xaxis
   line(lineX, heightFromBottom, lineX, lineY); //yaxis
@@ -512,28 +526,84 @@ void drawBarChart() {
   text("Happiness Scores", 0, 0);
   popMatrix();
 
+//changes the color of fill when it is chosen
   for (int i = 0; i < 30; i++) {
     if (i == selectedCountry) {
       stroke(25);
-      strokeWeight(5);
-      fill(#D61C98);
+      strokeWeight(3);
+      if (regions2019[i] == 1) {
+        fill(#0035FF);
+      } else if (regions2019[i] == 2) {
+        fill(#FA0D3C);
+      } else if (regions2019[i] == 3) {
+        fill(#11F068);
+      } else if (regions2019[i] == 4) {
+        fill(#E7F011);
+      } else if (regions2019[i] == 5) {
+        fill(#E0A205);
+      } else if (regions2019[i] == 6) {
+        fill(#A337C4);
+      } else if (regions2019[i] == 7) {
+        fill(#F56FCD);
+      }
     } else {
       noStroke();
       strokeWeight(1);
       stroke(#000000);
       fill(255);
     }
+
     newHeight = map (score2019[i], minScore, maxScore, yMin, yMax);
     rect(inc, heightFromBottom, newWidth, -newHeight);
     inc = inc + newWidth;
   }
 }
 
+void drawTicksForBarChart() {
+  fill(0);
+  //float lineX = 75;
+  //float heightFromBottom = height - 75;
+  //float xAxisB = (width/2) - 75;
+  //float lineY = 480;
+
+  //float newWidth = (xAxisB - lineX) / 30;
+  //float newHeight; 
+  //float inc = 75;
+
+  ////for scaling the graph
+  //float yLen = heightFromBottom - lineY;
+  //float yMax = 0.75 * yLen;
+  //float yMin = 0.25 * yLen;
+
+  //line(lineX, heightFromBottom, xAxisB, heightFromBottom); //xaxis
+  //line(lineX, heightFromBottom, lineX, lineY); //yaxis
+
+  //line (x11,y1,x2,y2)
+
+  float textX = 58;
+  float lineX1 = 65;
+  float lineX2 = 75;
+  float lineY = (height - 120);
+
+  //draws ticks
+  line(lineX1, lineY, lineX2, lineY); // 2
+  line(lineX1, lineY - 70, lineX2, lineY-70); // 5
+  line(lineX1, lineY-135, lineX2, lineY-135); // 7
+  line(lineX1, lineY-200, lineX2, lineY-200); // 10
+  //writes numbers
+  text("0", textX, (height - 70));
+  text("2", textX, (height - 120));
+  text("5", textX, (height - 190));
+  text("7", textX, (height - 255));
+  text("10", textX, (height - 320));
+  noFill();
+}
+
 //Changes through the 30 different countries that are selected
 void keyPressed() {
-  if (key == CODED && keyCode == UP) {
+  if (key == CODED && keyCode ==RIGHT) {
     selectedCountry = (selectedCountry + 1) % 30;
-  } else if (key == CODED && keyCode == DOWN) {
+  } else if (key == CODED && keyCode == LEFT) {
     selectedCountry = (selectedCountry - 1) % 30;
 
     if (selectedCountry < 0) {
