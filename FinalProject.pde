@@ -1,6 +1,10 @@
 //Kat Sotelo & Gharin Pautz & Vincent Rettke
-//Final Project
+//CPSC313 Final Project
 //05/07/2020
+
+// This project uses a dataset from https://www.kaggle.com/unsdsn/world-happiness
+// and visualizes 3 graphs depicting world hapiness scores, and number of different
+// attributes included in the dataset.
 
 
 //Table
@@ -122,7 +126,7 @@ void writeText() {
   //text part
   textSize(12);
   fill(50);
-  text("Happiness Chart for 2019", width/2 - 100, 20);
+  text("Use right & left arrow keys to switch countries", 15, 15);
   text("Happiness", width - 100, 70); 
   text("GDP", width - 85, 110); 
   text("Social Support", width - 110, 150); 
@@ -136,7 +140,8 @@ void writeText() {
   text("to change x ", width -113, 360);
   text("axis.", width -85, 380);
 
-  text("30 Countries Happiness Scores for 2019  ", width/2 -400, 425);
+  text("2019 Happiness Scores vs. Selected Factor", width/2 - 160, 30);
+  text("2019 Happiness Scores for Top 30 Countries", width/2 -400, 425);
   text("Happiness Scores from 2015-2019 of ", width/2 + 39, 425);
   fill(255, 0, 0);
   text(countries2019[selectedCountry], width/2 + 320, 425);
@@ -218,7 +223,7 @@ void drawScatterPlot(float[] xArray, int selectedCountry, float animWidth, float
   // draw outlines for scatterplot graph
   // Scatterplot starts at (200, 60)
   //       ends at (width - 150, height/2 - 50)
-  float xAxisYStart = (height / 2) - 50;
+  float xAxisYStart = (height / 2) - 50; //350
   float xAxisYEnd = 60;
   float xAxisXStart = 200;
 
@@ -228,46 +233,109 @@ void drawScatterPlot(float[] xArray, int selectedCountry, float animWidth, float
   // Y-Axis Label
   pushMatrix();
   fill(0);
-  translate(xAxisXStart - 20, xAxisYStart - 80);
+  translate(xAxisXStart - 30, xAxisYStart - 85);
   rotate(-HALF_PI);
   text("Happiness Scores", 0, 0);
   popMatrix();
 
+  strokeWeight(1);
+  textSize(10);
   line(xAxisXStart, xAxisYStart, xAxisXStart, xAxisYEnd); //y-axis
+  // draw tick marks on y-axis
+  line(xAxisXStart - 5, xAxisYStart, xAxisXStart + 5, xAxisYStart);
+  text("6.34", xAxisXStart - 30, xAxisYStart);
+  line(xAxisXStart - 5, xAxisYStart - 145 / 2, xAxisXStart + 5, xAxisYStart - 145 / 2);
+  text("6.70", xAxisXStart - 30, xAxisYStart - 145 / 2);
+  line(xAxisXStart - 5, xAxisYEnd + ((xAxisYStart - xAxisYEnd) / 2), xAxisXStart + 5, xAxisYEnd + ((xAxisYStart - xAxisYEnd) / 2));
+  text("7.05", xAxisXStart - 25, xAxisYEnd + ((xAxisYStart - xAxisYEnd) / 2));
+  line(xAxisXStart - 5, xAxisYEnd + 145 / 2, xAxisXStart + 5, xAxisYEnd + 145 / 2);
+  text("7.41", xAxisXStart - 30, xAxisYEnd + 145 / 2);
+  line(xAxisXStart - 5, xAxisYEnd, xAxisXStart + 5, xAxisYEnd);
+  text("7.77", xAxisXStart - 30, xAxisYEnd);
 
   // X-Axis Label
 
+  strokeWeight(5);
   if (chosenArray == score2019) {
     fill(0);
     textSize(15);
-    text("Happiness Scores", 430, height/2 - 25);
+    text("Happiness Scores", 430, height/2 - 20);
+    textSize(10);
+    text("6.34", xAxisXStart - 10, xAxisYStart + 15);
+    text("6.70", xAxisXStart + 152.5, xAxisYStart + 15);
+    text("7.05", (width + 50) / 2 - 10, xAxisYStart + 15);
+    text("7.41", yAxisXEnd - 172.5, xAxisYStart + 15);
+    text("7.77", yAxisXEnd - 10, xAxisYStart + 15);
   } else if (chosenArray == gdp2019) {
     fill(0);
     textSize(15);
-    text("GDP Per Capita", 440, height/2 - 25);
+    text("GDP Per Capita", 440, height/2 - 20);
+    textSize(10);
+    text("0.8", xAxisXStart - 10, xAxisYStart + 15);
+    text("1.02", xAxisXStart + 152.5, xAxisYStart + 15);
+    text("1.24", (width + 50) / 2 - 10, xAxisYStart + 15);
+    text("1.46", yAxisXEnd - 172.5, xAxisYStart + 15);
+    text("1.68", yAxisXEnd - 10, xAxisYStart + 15);
   } else if (chosenArray == socialSupport2019) {
     fill(0);
     textSize(15);
-    text("Social Support", 450, height/2 - 25);
+    text("Social Support", 450, height/2 - 20);
+    textSize(10);
+    text("1.27", xAxisXStart - 10, xAxisYStart + 15);
+    text("1.36", xAxisXStart + 152.5, xAxisYStart + 15);
+    text("1.46", (width + 50) / 2 - 10, xAxisYStart + 15);
+    text("1.54", yAxisXEnd - 172.5, xAxisYStart + 15);
+    text("1.62", yAxisXEnd - 10, xAxisYStart + 15);
   } else if (chosenArray == healthyLife2019) {
     fill(0);
     textSize(15);
-    text("Healthy Life Expectancy", 420, height/2 - 25);
+    text("Healthy Life Expectancy", 420, height/2 - 20);
+    textSize(10);
+    text("0.75", xAxisXStart - 10, xAxisYStart + 15);
+    text("0.83", xAxisXStart + 152.5, xAxisYStart + 15);
+    text("0.91", (width + 50) / 2 - 10, xAxisYStart + 15);
+    text("0.99", yAxisXEnd - 172.5, xAxisYStart + 15);
+    text("1.06", yAxisXEnd - 10, xAxisYStart + 15);
   } else if (chosenArray == freedom2019) {
     fill(0);
     textSize(15);
-    text("Freedom To Make Life Choices", 400, height/2 - 25);
+    text("Freedom To Make Life Choices", 400, height/2 - 20);
+    textSize(10);
+    text("0.35", xAxisXStart - 10, xAxisYStart + 15);
+    text("0.41", xAxisXStart + 152.5, xAxisYStart + 15);
+    text("0.47", (width + 50) / 2 - 10, xAxisYStart + 15);
+    text("0.54", yAxisXEnd - 172.5, xAxisYStart + 15);
+    text("0.60", yAxisXEnd - 10, xAxisYStart + 15);
   } else if (chosenArray == generosity2019) {
     fill(0);
     textSize(15);
-    text("Generosity", 460, height/2 - 25);
+    text("Generosity", 460, height/2 - 20);
+    textSize(10);
+    text("0.04", xAxisXStart - 10, xAxisYStart + 15);
+    text("0.13", xAxisXStart + 152.5, xAxisYStart + 15);
+    text("0.21", (width + 50) / 2 - 10, xAxisYStart + 15);
+    text("0.29", yAxisXEnd - 172.5, xAxisYStart + 15);
+    text("0.37", yAxisXEnd - 10, xAxisYStart + 15);
   } else if (chosenArray == corruption2019) {
     fill(0);
     textSize(15);
-    text("Perceptions of Corruption", 420, height/2 - 25);
+    text("Perceptions of Corruption", 420, height/2 - 20);
+    textSize(10);
+    text("0.03", xAxisXStart - 10, xAxisYStart + 15);
+    text("0.13", xAxisXStart + 152.5, xAxisYStart + 15);
+    text("0.22", (width + 50) / 2 - 10, xAxisYStart + 15);
+    text("0.32", yAxisXEnd - 172.5, xAxisYStart + 15);
+    text("0.41", yAxisXEnd - 10, xAxisYStart + 15);
   }
 
+  strokeWeight(1);
   line(xAxisXStart, yAxisYHeight, yAxisXEnd, yAxisYHeight); //x-axis
+  // tick marks on x-axis
+  line(xAxisXStart, yAxisYHeight + 5, xAxisXStart, yAxisYHeight - 5);
+  line(xAxisXStart + 162.5, yAxisYHeight + 5, xAxisXStart + 162.5, yAxisYHeight - 5);
+  line((width + 50) / 2, yAxisYHeight + 5, (width + 50) / 2, yAxisYHeight - 5);
+  line(yAxisXEnd - 162.5, yAxisYHeight + 5, yAxisXEnd - 162.5, yAxisYHeight - 5);
+  line(yAxisXEnd, yAxisYHeight + 5, yAxisXEnd, yAxisYHeight - 5);
 
   // Retrieve data and draw circles
   float yMin = findMin(score2019);
@@ -281,10 +349,7 @@ void drawScatterPlot(float[] xArray, int selectedCountry, float animWidth, float
   float x, y;
 
   for (int i = 0; i < 30; i++) {
-    if (i == selectedCountry) {
-      stroke(25);
-      strokeWeight(5);
-    } else if (regions2019[i] == 1) {
+     if (regions2019[i] == 1) {
       fill(#0035FF);
       stroke(#0035FF);
     } else if (regions2019[i] == 2) {
@@ -305,20 +370,24 @@ void drawScatterPlot(float[] xArray, int selectedCountry, float animWidth, float
     } else if (regions2019[i] == 7) {
       fill(#F56FCD);
       stroke(#F56FCD);
-    } 
+    } if (i == selectedCountry) {
+      stroke(25);
+      strokeWeight(5);
+    }
+    
     y = map(score2019[i], yMin, yMax, 70, height/2 - 60);
-    x = map(xArray[i], xMin, xMax, 210, width - 160); //30, width - 140
+    x = map(xArray[i], xMin, xMax, 210, width - 160);
 
-    println("x min: " + xMin);
-    println("x max: " + xMax);
-
+    if (i != selectedCountry) {
+      ellipse(x, (height/2) - y, radX, radY);
+    }
     //If the selected country is chosen then there is motion
     if (i == selectedCountry) {
       ellipse(x, (height/2) - y, animWidth, animHeight);
-    } else {
-      ellipse(x, (height/2) - y, radX, radY);
-    }
+    } 
+    
   }
+
   strokeWeight(1);
   stroke(#000000);
 }
@@ -561,24 +630,6 @@ void drawBarChart() {
 
 void drawTicksForBarChart() {
   fill(0);
-  //float lineX = 75;
-  //float heightFromBottom = height - 75;
-  //float xAxisB = (width/2) - 75;
-  //float lineY = 480;
-
-  //float newWidth = (xAxisB - lineX) / 30;
-  //float newHeight; 
-  //float inc = 75;
-
-  ////for scaling the graph
-  //float yLen = heightFromBottom - lineY;
-  //float yMax = 0.75 * yLen;
-  //float yMin = 0.25 * yLen;
-
-  //line(lineX, heightFromBottom, xAxisB, heightFromBottom); //xaxis
-  //line(lineX, heightFromBottom, lineX, lineY); //yaxis
-
-  //line (x11,y1,x2,y2)
 
   float textX = 58;
   float lineX1 = 65;
